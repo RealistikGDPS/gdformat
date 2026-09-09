@@ -1,0 +1,60 @@
+[project]
+name = "gdformat"
+version = "0.1.0"
+description = "Parser and builder for the Geometry Dash 2.2 server protocol."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy>=1.19",
+    "pre-commit>=4",
+    "ruff>=0.14",
+]
+
+[build-system]
+requires = ["uv_build>=0.9"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = ""
+
+[tool.ruff]
+line-length = 88
+target-version = "py314"
+
+[tool.ruff.lint]
+select = [
+    "A",
+    "B",
+    "C4",
+    "E",
+    "F",
+    "I",
+    "N",
+    "PERF",
+    "RUF",
+    "SIM",
+    "TID",
+    "UP",
+    "W",
+]
+ignore = [
+    "RUF012",
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "parents"
+
+[tool.mypy]
+strict = true
+warn_unreachable = true
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
