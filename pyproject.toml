@@ -5,8 +5,35 @@ description = "Parser and builder for the Geometry Dash 2.2 server protocol."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
+authors = [{ name = "RealistikDash" }]
+maintainers = [{ name = "RealistikDash" }]
 requires-python = ">=3.14"
 dependencies = []
+keywords = [
+    "geometry-dash",
+    "gdps",
+    "gd",
+    "protocol",
+    "parser",
+    "serialisation",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Games/Entertainment",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/RealistikGDPS/gdformat"
+Repository = "https://github.com/RealistikGDPS/gdformat"
+Issues = "https://github.com/RealistikGDPS/gdformat/issues"
 
 [dependency-groups]
 dev = [
@@ -16,7 +43,7 @@ dev = [
 ]
 
 [build-system]
-requires = ["uv_build>=0.9"]
+requires = ["uv_build>=0.9,<0.13"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]

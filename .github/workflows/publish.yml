@@ -1,0 +1,35 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    name: Build and publish to PyPI
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.14"
+
+      - name: Check the tag matches the project version
+        run: |
+          version="$(uv version --short)"
+          if [ "v$version" != "${GITHUB_REF_NAME}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match pyproject version v$version" >&2
+            exit 1
+          fi
+
+      - name: Build
+        run: uv build
+
+      - name: Publish
+        run: uv publish
