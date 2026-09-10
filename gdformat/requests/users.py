@@ -188,9 +188,10 @@ def parse_update_stats(form: Form) -> ParseResult[UpdateStatsRequest]:
 
 
 def verify_stats_chk(request: UpdateStatsRequest) -> bool:
-    """Verified against the official server: the value list is the 2.1 list, the
-    string length of `dinfo`, `dinfow`, `dinfog`, `sinfo`, `sinfod` and `sinfog`.
-    The event counters are not part of it."""
+    """The value list is the 2.1 list, then the length of `dinfo`, `dinfow` and
+    `dinfog`, then `sinfo`, `sinfod` and `sinfog`. The client only sends the
+    demon values when it has completed a demon, and it only hashes them then
+    too (observed on 2.2081); the event counters are never part of it."""
 
     icons = request.icons
     classic = request.classic
@@ -201,6 +202,14 @@ def verify_stats_chk(request: UpdateStatsRequest) -> bool:
         f"{classic.harder},{classic.insane},{platformer.auto},{platformer.easy},"
         f"{platformer.normal},{platformer.hard},{platformer.harder},{platformer.insane}"
     )
+    demons: tuple[object, ...] = ()
+
+    if request.demon_level_ids:
+        demons = (
+            len(serialise_integers(request.demon_level_ids)),
+            request.weekly_demons,
+            request.gauntlet_demons,
+        )
 
     expected = profile_chk(
         (
@@ -221,9 +230,7 @@ def verify_stats_chk(request: UpdateStatsRequest) -> bool:
             int(request.glow),
             icons.spider,
             icons.explosion,
-            len(serialise_integers(request.demon_level_ids)),
-            request.weekly_demons,
-            request.gauntlet_demons,
+            *demons,
             sinfo,
             classic.daily,
             classic.gauntlet,
