@@ -83,6 +83,9 @@ class GauntletsRequest:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class LevelSearchRequest:
+    """`gauntlet_id` is set when the client lists a gauntlet's levels; the
+    search type and filters are then irrelevant."""
+
     client: Client
     auth: Auth | None
     search_type: SearchType
@@ -108,6 +111,7 @@ class LevelSearchRequest:
     custom_song: bool = False
     followed_account_ids: tuple[int, ...] = ()
     local: bool = False
+    gauntlet_id: int | None = None
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -288,6 +292,8 @@ def parse_gauntlets(form: Form) -> ParseResult[GauntletsRequest]:
 
 def parse_level_search(form: Form) -> ParseResult[LevelSearchRequest]:
     reader = Reader(form)
+    # The client sends 0 when it is not browsing a gauntlet.
+    gauntlet_id = reader.integer("gauntlet", default=0) or None
 
     return reader.done(
         LevelSearchRequest(
@@ -319,6 +325,7 @@ def parse_level_search(form: Form) -> ParseResult[LevelSearchRequest]:
             custom_song=reader.boolean("customSong"),
             followed_account_ids=reader.integers("followed"),
             local=reader.boolean("local"),
+            gauntlet_id=gauntlet_id,
         )
     )
 

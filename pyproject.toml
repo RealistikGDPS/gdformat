@@ -1,6 +1,6 @@
 [project]
 name = "gdformat"
-version = "0.1.0"
+version = "0.2.0"
 description = "Parser and builder for the Geometry Dash 2.2 server protocol."
 readme = "README.md"
 license = "MIT"

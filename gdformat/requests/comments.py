@@ -34,6 +34,10 @@ class DeleteCommentRequest:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class AccountCommentsRequest:
+    """`account_id` is the account whose comments are listed. The client sends
+    it in `accountID` next to its own `gjp2`, so `auth` names the target, not
+    the requester, and cannot be verified."""
+
     client: Client
     auth: Auth | None
     account_id: int
