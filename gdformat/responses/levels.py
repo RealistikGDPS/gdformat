@@ -1,5 +1,8 @@
 from collections.abc import Sequence
 
+from gdformat._common import ParseError
+from gdformat._common import ParseResult
+from gdformat._common import is_error
 from gdformat.crypto import KEY_CHESTS
 from gdformat.crypto import encode_reward_blob
 from gdformat.crypto import level_download_hash
@@ -13,6 +16,7 @@ from gdformat.objects._common import Page
 from gdformat.objects._common import serialise_page
 from gdformat.objects.level import Level
 from gdformat.objects.level import LevelPreview
+from gdformat.objects.level import parse_level
 from gdformat.objects.level import serialise_level
 from gdformat.objects.level import serialise_level_preview
 from gdformat.objects.reward import RewardStack
@@ -96,6 +100,26 @@ def serialise_level_download(
     return (
         f"{text}#{creator_text}#{song_text}#{serialise_artists(_extra_artists(songs))}"
     )
+
+
+def parse_level_download(text: str) -> ParseResult[Level]:
+    """Reads what the official server sends for downloadGJLevel22. Only the
+    level hash is verified; the metadata hash repeats fields already read."""
+
+    segments = text.split("#")
+
+    if len(segments) < 2:
+        return ParseError.INVALID_LAYOUT
+
+    level = parse_level(segments[0])
+
+    if is_error(level):
+        return level
+
+    if segments[1] != level_download_hash(level.level_string):
+        return ParseError.INVALID_VALUE
+
+    return level
 
 
 def serialise_timely(timely_id: int, seconds_left: int) -> str:

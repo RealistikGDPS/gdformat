@@ -5,6 +5,7 @@ from .comments import PERMANENT_COMMENT_BAN
 from .comments import serialise_account_comments
 from .comments import serialise_comment_ban
 from .comments import serialise_level_comments
+from .levels import parse_level_download
 from .levels import serialise_event
 from .levels import serialise_level_download
 from .levels import serialise_level_scores

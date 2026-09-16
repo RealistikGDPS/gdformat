@@ -12,7 +12,7 @@ runtime dependencies.
 | Module | Contents |
 |--------|----------|
 | `gdformat.objects` | Frozen dataclasses for each wire object (`Level`, `User`, `Comment`, `Song`, ...) with `serialise_*` / `parse_*` functions. |
-| `gdformat.responses` | One `serialise_*` per endpoint response, producing the exact string to send. |
+| `gdformat.responses` | One `serialise_*` per endpoint response, producing the exact string to send, plus `parse_level_download` for reading an official level download. |
 | `gdformat.requests` | One `*Request` dataclass and `parse_*` per endpoint, taking the POST form. `verify_*` helpers check the client integrity values. |
 | `gdformat.crypto` | XOR keys and salts, `gjp2`, `chk` generation, response hashes, level passwords, leaderboard seeds. |
 | `gdformat.encoding` | Base64, XOR, level string compression, URL quoting, relative age strings. |
@@ -23,6 +23,7 @@ runtime dependencies.
 
 ```python
 from gdformat import is_error, objects, requests, responses
+
 
 def download_level(form: dict[str, str]) -> str:
     request = requests.parse_download_level(form)
