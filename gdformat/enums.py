@@ -134,8 +134,8 @@ class CommentHistoryState(IntEnum):
 class FriendState(IntEnum):
     NONE = 0
     FRIENDS = 1
-    REQUEST_SENT = 3
-    REQUEST_RECEIVED = 4
+    REQUEST_RECEIVED = 3
+    REQUEST_SENT = 4
 
 
 class SearchType(IntEnum):
