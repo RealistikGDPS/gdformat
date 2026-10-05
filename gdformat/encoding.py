@@ -7,6 +7,7 @@ import urllib.parse
 import zlib
 
 _ALPHABET = string.ascii_letters + string.digits
+_INFLATE_CHUNK = 1 << 20
 _SEPARATOR_TABLE = str.maketrans("", "", ":|#~")
 _AGE_UNITS = (
     (31_536_000, "year"),
@@ -84,6 +85,33 @@ def decompress_level(data: str) -> str | None:
         return zlib.decompress(raw, 15 | 32).decode("utf-8", "replace")
     except zlib.error:
         return None
+
+
+def level_inflates_within(data: str, limit: int) -> bool:
+    """Whether a compressed level is a complete stream of at most `limit`
+    inflated bytes. Read in chunks, so a hostile stream is never held whole."""
+
+    raw = decode_base64(data)
+
+    if raw is None:
+        return False
+
+    inflater = zlib.decompressobj(15 | 32)
+    pending = raw
+    total = 0
+
+    try:
+        while pending and not inflater.eof:
+            total += len(inflater.decompress(pending, _INFLATE_CHUNK))
+
+            if total > limit:
+                return False
+
+            pending = inflater.unconsumed_tail
+    except zlib.error:
+        return False
+
+    return inflater.eof
 
 
 def deflate_base64(text: str) -> str:
